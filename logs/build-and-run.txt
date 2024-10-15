@@ -1,0 +1,5 @@
+2024-10-14 11:44:33 - Script started
+2024-10-14 11:44:33 - Loaded configuration from config.yaml
+2024-10-14 11:44:34 - CUDA version: 12.6.0
+2024-10-14 11:44:34 - KUBERNETES version: v1.28.0
+2024-10-14 11:44:34 - DOCKER version: 27.2.0

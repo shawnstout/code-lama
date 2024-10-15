@@ -1,0 +1,112 @@
+deployments:
+- name: rabbitmq
+  baseImage: rabbitmq:3-management
+  k8sConfig: deploy-rabbitmq.yaml
+  deployOrder: 1
+  additionalFiles: []
+  secrets: []
+  port: 15672
+
+- name: supabase
+  baseImage: supabase/postgres:14.1.0
+  k8sConfig: deploy-supabase.yaml
+  deployOrder: 2
+  additionalFiles: 
+    - supabase-init.sql
+  secrets: 
+    - supabase-secrets
+  port: 54321
+  placeholders:
+    SUPABASE_URL: http://supabase-service:8000
+    SUPABASE_KEY: "{{SUPABASE_KEY}}"
+    POSTGRES_PASSWORD: "{{POSTGRES_PASSWORD}}"
+
+- name: worker-ai-70b
+  baseImage: nvidia/cuda:12.6.0-base-ubuntu22.04
+  dockerfile: worker.Dockerfile
+  k8sConfig: deploy-worker-ai-70b.yaml
+  deployOrder: 3
+  additionalFiles:
+    - worker-ai-script.py
+    - worker-config-70b.json
+  secrets: []
+  requirements:
+    - python3
+    - python3-pip
+    - git
+    - curl
+  pip_requirements:
+    - pika
+    - requests
+    - torch
+    - transformers
+    - numpy
+    - pandas
+
+- name: worker-ai-34b
+  baseImage: nvidia/cuda:12.6.0-base-ubuntu22.04
+  dockerfile: worker.Dockerfile
+  k8sConfig: deploy-worker-ai-34b.yaml
+  deployOrder: 4
+  additionalFiles:
+    - worker-ai-script.py
+    - worker-config-34b.json
+  secrets: []
+  requirements:
+    - python3
+    - python3-pip
+    - git
+    - curl
+  pip_requirements:
+    - pika
+    - requests
+    - torch
+    - transformers
+    - numpy
+    - pandas
+
+- name: openwebui
+  baseImage: node:18-alpine
+  dockerfile: openwebui.Dockerfile
+  k8sConfig: deploy-openwebui.yaml
+  deployOrder: 5
+  additionalFiles:
+    - openwebui-config.json
+  secrets: []
+  requirements:
+    - express
+    - socket.io
+    - axios
+  port: 8080
+
+- name: n8n
+  baseImage: n8nio/n8n:latest
+  k8sConfig: deploy-n8n.yaml
+  deployOrder: 6
+  additionalFiles:
+    - n8n-workflow.json
+  secrets: []
+  port: 5678
+
+- name: master-ai
+  baseImage: nvidia/cuda:12.6.0-base-ubuntu22.04
+  dockerfile: master.Dockerfile
+  k8sConfig: deploy-master-ai.yaml
+  deployOrder: 7
+  additionalFiles:
+    - master-ai-script.py
+    - master-config.json
+  secrets:
+    - supabase-secrets
+  requirements:
+    - python3
+    - python3-pip
+    - git
+    - curl
+  pip_requirements:
+    - pika
+    - requests
+    - torch
+    - transformers
+    - numpy
+    - pandas

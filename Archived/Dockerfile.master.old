@@ -1,0 +1,30 @@
+FROM python:3-slim
+
+# Install required system dependencies
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip \
+    && ./aws/install \
+    && rm -rf awscliv2.zip aws
+
+# Install required packages
+RUN pip install --no-cache-dir pika psycopg2-binary requests boto3
+
+# Set working directory
+WORKDIR /app
+
+# Copy the script
+COPY master-ai-script.py /app/master_ai.py
+
+# Run the script
+CMD ["python", "master_ai.py"]

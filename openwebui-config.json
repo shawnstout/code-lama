@@ -1,0 +1,21 @@
+{
+  "models": {
+    "34b": {
+      "endpoint": "http://worker-ai-34b-service:11434"
+    },
+    "70b": {
+      "endpoint": "http://worker-ai-70b-service:11434"
+    }
+  },
+  "features": {
+    "speechIntegration": true,
+    "rag": true
+  },
+  "storage": {
+    "type": "supabase",
+    "config": {
+      "url": "YOUR_SUPABASE_URL",
+      "key": "YOUR_SUPABASE_KEY"
+    }
+  }
+}

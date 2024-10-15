@@ -1,0 +1,267 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-ai-34b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-ai-34b
+  template:
+    metadata:
+      labels:
+        app: worker-ai-34b
+    spec:
+      containers:
+      - name: worker-ai-34b
+        image: worker-ai:latest
+        imagePullPolicy: Always
+        env:
+        - name: MODEL
+          value: "codellama:34b-instruct"
+        - name: RABBITMQ_HOST
+          value: "rabbitmq-service"
+        - name: OLLAMA_API_BASE_URL
+          value: "http://localhost:11434"
+        resources:
+          limits:
+            nvidia.com/gpu: 1  # Request 1 GPU
+        volumeMounts:
+        - name: worker-ai-34b-storage
+          mountPath: /app/models
+      volumes:
+      - name: worker-ai-34b-storage
+        persistentVolumeClaim:
+          claimName: worker-ai-34b-data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

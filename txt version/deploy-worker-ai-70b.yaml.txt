@@ -1,0 +1,233 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-ai-70b
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: worker-ai-70b
+  template:
+    metadata:
+      labels:
+        app: worker-ai-70b
+    spec:
+      containers:
+      - name: worker-ai-70b
+        image: worker-ai:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MODEL
+          value: "codellama:70b-instruct"
+        - name: RABBITMQ_HOST
+          value: "rabbitmq-service"
+        - name: OLLAMA_API_BASE_URL
+          value: "http://ollama-service:11434"
+        volumeMounts:
+        - name: worker-ai-70b-storage
+          mountPath: /app/models
+      volumes:
+      - name: worker-ai-70b-storage
+        persistentVolumeClaim:
+          claimName: worker-ai-70b-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: worker-ai-70b-service
+spec:
+  selector:
+    app: worker-ai-70b
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

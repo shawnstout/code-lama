@@ -1,0 +1,46 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extracting input from the webhook\nconst input = $input.item.json.input;\nconst topic = $input.item.json.topic;\n\n// Prepare message for RabbitMQ\nconst message = JSON.stringify({input, topic});\n\n// Return the prepared message\nreturn {message};"
+      },
+      "name": "Prepare Message",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "amqp://rabbitmq-cluster",
+        "queue": "ai_tasks",
+        "options": {
+          "persistent": true
+        }
+      },
+      "name": "Send to RabbitMQ",
+      "type": "n8n-nodes-base.rabbitmq",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "
