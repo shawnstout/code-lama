@@ -1,22 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ai-api
+  name: codellama-api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: ai-api
+      app: codellama-api
   template:
     metadata:
       labels:
-        app: ai-api
+        app: codellama-api
     spec:
       containers:
-      - name: ai-api
-        image: $aiApiImage
+      - name: codellama-api
+        image: codellama-api:latest
         ports:
         - containerPort: 5000
+        env:
+        - name: MODEL_PATH
+          value: "/models/codellama"
         resources:
           requests:
             cpu: 100m
