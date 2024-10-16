@@ -1,2 +1,2 @@
-aiApiImage: ai-api:latest
-aiWorkerImage: ai-worker:latest
+apiImage: api:latest
+workerImage: worker:latest
