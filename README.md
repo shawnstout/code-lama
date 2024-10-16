@@ -79,11 +79,12 @@ This repository contains the necessary files and instructions to set up an AI en
 ## Components
 
 - Master AI
-- Worker AI
+- Worker AI (34B and 70B models)
 - RabbitMQ
 - Supabase
 - n8n
 - OpenWebUI
+- AgentK
 
 ## Configuration
 
