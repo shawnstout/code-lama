@@ -6,7 +6,6 @@ This project contains the necessary files and scripts to deploy the CodeLlama sy
 
 - `build-and-run.ps1`: Main PowerShell script for building and running the deployment
 - `config.yaml`: Configuration file for the deployment
-- `gpu-check.ps1`: Script to check GPU availability
 - `ai-api-deployment.yaml`
 - `ai-api-service.yaml`
 - `ai-worker-deployment.yaml`
