@@ -160,6 +160,9 @@ def main():
     with open("config.yaml", "r") as config_file:
         config = yaml.safe_load(config_file)
 
+    # Update requirements file names in Dockerfiles
+    update_dockerfile_requirements()
+
     # Build and push Docker images
     build_and_push_docker_images()
 
@@ -170,6 +173,18 @@ def main():
     apply_kubernetes_config(config["kubernetes_configs"])
 
     write_log("Build and run process completed successfully!", important=True)
+
+def update_dockerfile_requirements():
+    """Update requirements file names in Dockerfiles."""
+    dockerfiles = ["ai-api.Dockerfile", "ai-worker.Dockerfile", "agentk.Dockerfile"]
+    for dockerfile in dockerfiles:
+        if os.path.exists(dockerfile):
+            with open(dockerfile, "r") as f:
+                content = f.read()
+            updated_content = content.replace("requirements.txt", f"{dockerfile.split('.')[0]}-requirements.txt")
+            with open(dockerfile, "w") as f:
+                f.write(updated_content)
+            write_log(f"Updated requirements file name in {dockerfile}")
 
 if __name__ == "__main__":
     main()
