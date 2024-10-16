@@ -19,5 +19,3 @@ EXPOSE 3000
 
 # Start the application (fallback to a simple HTTP server if no npm start script)
 CMD if [ -f package.json ] && grep -q '"start"' package.json; then npm start; else python3 -m http.server 3000; fi
-
-
