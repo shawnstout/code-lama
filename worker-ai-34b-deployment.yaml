@@ -15,6 +15,7 @@ spec:
       containers:
       - name: worker-ai-34b
         image: worker:latest
+        imagePullPolicy: Never
         env:
         - name: MODEL_SIZE
           value: "34B"

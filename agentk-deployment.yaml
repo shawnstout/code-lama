@@ -15,6 +15,7 @@ spec:
       containers:
       - name: agentk
         image: agentk:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 5000
 ---
