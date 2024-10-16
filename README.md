@@ -7,18 +7,16 @@ This project contains the necessary files and scripts to deploy the CodeLlama sy
 - `build-and-run.ps1`: Main PowerShell script for building and running the deployment
 - `config.yaml`: Configuration file for the deployment
 - `gpu-check.ps1`: Script to check GPU availability
-- Kubernetes configuration files for various components:
-  - `ai-api-deployment.yaml`
-  - `ai-api-service.yaml`
-  - `ai-worker-deployment.yaml`
-  - `ai-worker-service.yaml`
-  - `postgres-deployment.yaml`
-  - `postgres-service.yaml`
-  - `supabase-deployment.yaml`
-  - `supabase-service.yaml`
-- Dockerfiles for custom images:
-  - `Dockerfile.ai-api`
-  - `Dockerfile.ai-worker`
+- `ai-api-deployment.yaml`
+- `ai-api-service.yaml`
+- `ai-worker-deployment.yaml`
+- `ai-worker-service.yaml`
+- `postgres-deployment.yaml`
+- `postgres-service.yaml`
+- `supabase-deployment.yaml`
+- `supabase-service.yaml`
+- `Dockerfile.ai-api`
+- `Dockerfile.ai-worker`
 
 ## Prerequisites
 
