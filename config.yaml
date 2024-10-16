@@ -12,10 +12,8 @@ kubernetes_configs:
 
 docker_images:
   master: "master:latest"
-  worker: "worker:latest"
+  worker-ai: "worker-ai:latest"
   agentk: "agentk:latest"
-  ai-api: "ai-api:latest"
-  ai-worker: "ai-worker:latest"
 
 rabbitmq:
   host: "rabbitmq-service"
