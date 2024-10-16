@@ -129,11 +129,11 @@ def execute_command(command):
 
 def build_and_push_docker_images():
     """Build and push Docker images for all components."""
-    components = ["master", "worker", "agentk", "ai-api", "ai-worker"]
+    components = ["master", "worker", "agentk", "ai-api", "worker-ai"]
     for component in components:
         write_log(f"Building Docker image for {component}...", important=True)
         dockerfile_name = f"{component}.Dockerfile"
-        if component in ["ai-api", "ai-worker", "agentk"]:
+        if component in ["ai-api", "worker-ai", "agentk"]:
             dockerfile_name = f"{component}.Dockerfile"
         execute_command(f"docker build -t {component}:latest -f {dockerfile_name} .")
         write_log(f"Pushing Docker image for {component}...")
