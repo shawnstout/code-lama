@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supabase
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: supabase
+  template:
+    metadata:
+      labels:
+        app: supabase
+    spec:
+      containers:
+      - name: supabase
+        image: supabase/supabase:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: POSTGRES_DB
+          value: codedata
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: password
+        - name: SUPABASE_JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: supabase-secret
+              key: jwt-secret
+        volumeMounts:
+        - name: supabase-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: supabase-storage
+        emptyDir: {}

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-worker
+spec:
+  selector:
+    app: ai-worker
+  ports:
+  - port: 80
+    targetPort: 5000
