@@ -1,15 +1,6 @@
 import os
 import subprocess
 
-# Function to replace placeholders in files
-def replace_placeholders(config_file, placeholders):
-    with open(config_file, 'r') as file:
-        content = file.read()
-    for key, value in placeholders.items():
-        content = content.replace(key, value)
-    with open(config_file, 'w') as file:
-        file.write(content)
-
 # Function for logging
 def write_log(message, important=False):
     log_message = f"IMPORTANT: {message}" if important else message
@@ -31,10 +22,9 @@ execute_command('kubectl get pods')
 write_log("Kubernetes command executed.", important=True)
 
 # Function to handle deployment configurations
-def apply_kubernetes_config(deployment_config, placeholders):
+def apply_kubernetes_config(deployment_config):
     write_log(f"Applying {deployment_config['name']} configuration...", important=True)
     if os.path.exists(deployment_config['k8sConfig']):
-        replace_placeholders(deployment_config['k8sConfig'], deployment_config['placeholders'])
         result, error = execute_command(f"kubectl apply -f {deployment_config['k8sConfig']}")
         if error:
             write_log(f"Failed to apply {deployment_config['name']} configuration. Error: {error}", important=True)
@@ -45,11 +35,10 @@ def apply_kubernetes_config(deployment_config, placeholders):
 
 # Example configurations to apply
 configurations = [
-    {'name': 'app-deployment', 'k8sConfig': 'path/to/k8s/config.yaml', 'placeholders': {'<placeholder>': 'value'}},
-    {'name': 'agentk-deployment', 'k8sConfig': 'deploy-agentk.yaml', 'placeholders': {}},
-    {'name': 'agentk-dockerfile', 'k8sConfig': 'agentk.Dockerfile', 'placeholders': {}}
+    {'name': 'agentk-deployment', 'k8sConfig': 'deploy-agentk.yaml'},
+    {'name': 'agentk-dockerfile', 'k8sConfig': 'agentk.Dockerfile'}
 ]
 
 # Apply all configurations
 for config in configurations:
-    apply_kubernetes_config(config, config.get('placeholders', {}))
+    apply_kubernetes_config(config)
