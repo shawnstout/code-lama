@@ -50,4 +50,54 @@ results = get_results()
 print(results)
 
 # Close connection
-connection.close()
+connection.close()import pika
+import json
+import time
+
+def connect_to_rabbitmq():
+    """Establish a connection to RabbitMQ."""
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='task_queue', durable=True)
+    channel.queue_declare(queue='result_queue', durable=True)
+    return connection, channel
+
+def process_user_input(input_text, topic):
+    """Process user input and send task to worker."""
+    connection, channel = connect_to_rabbitmq()
+    
+    task = {
+        'input': input_text,
+        'topic': topic,
+        'timestamp': time.time()
+    }
+    
+    channel.basic_publish(
+        exchange='',
+        routing_key='task_queue',
+        body=json.dumps(task),
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    
+    print(f" [x] Sent task: {task}")
+    connection.close()
+
+def get_results():
+    """Retrieve results from the result queue."""
+    connection, channel = connect_to_rabbitmq()
+    
+    method_frame, header_frame, body = channel.basic_get(queue='result_queue')
+    if method_frame:
+        print(f" [x] Received result: {json.loads(body)}")
+        channel.basic_ack(method_frame.delivery_tag)
+    else:
+        print('No message returned')
+    
+    connection.close()
+
+# Example usage
+if __name__ == "__main__":
+    process_user_input("What is the capital of France?", "geography")
+    time.sleep(5)  # Wait for worker to process
+    get_results()

@@ -100,3 +100,73 @@ def main():
 
 if __name__ == "__main__":
     main()
+import subprocess
+import os
+import yaml
+import time
+from typing import Dict
+
+def write_log(message, important=False):
+    """Write a message to the log file."""
+    with open("logs/build-and-run.txt", "a") as log_file:
+        if important:
+            log_file.write("\n" + "=" * 50 + "\n")
+        log_file.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')} - {message}\n")
+        if important:
+            log_file.write("=" * 50 + "\n")
+    print(message)
+
+def execute_command(command):
+    """Execute a shell command and return its output."""
+    try:
+        result = subprocess.run(command, check=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        write_log(f"Command executed successfully: {command}")
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        write_log(f"Error executing command: {command}")
+        write_log(f"Error output: {e.stderr}")
+        raise
+
+def build_and_push_docker_images():
+    """Build and push Docker images for all components."""
+    components = ["master", "worker", "agentk", "ai-api", "ai-worker"]
+    for component in components:
+        write_log(f"Building Docker image for {component}...", important=True)
+        execute_command(f"docker build -t {component}:latest -f {component}.Dockerfile .")
+        write_log(f"Pushing Docker image for {component}...")
+        execute_command(f"docker push {component}:latest")
+
+def apply_kubernetes_config(deployment_config: Dict[str, str]):
+    """Apply Kubernetes configurations."""
+    for config_file, config_type in deployment_config.items():
+        write_log(f"Applying {config_type} configuration: {config_file}", important=True)
+        execute_command(f"kubectl apply -f {config_file}")
+
+def delete_kubernetes_deployments():
+    """Delete all Kubernetes deployments."""
+    write_log("Deleting all Kubernetes deployments...", important=True)
+    execute_command("kubectl delete deployments --all")
+
+def main():
+    # Ensure log directory exists
+    os.makedirs("logs", exist_ok=True)
+
+    write_log("Starting build and run process...", important=True)
+
+    # Load configuration
+    with open("config.yaml", "r") as config_file:
+        config = yaml.safe_load(config_file)
+
+    # Build and push Docker images
+    build_and_push_docker_images()
+
+    # Delete existing deployments
+    delete_kubernetes_deployments()
+
+    # Apply Kubernetes configurations
+    apply_kubernetes_config(config["kubernetes_configs"])
+
+    write_log("Build and run process completed successfully!", important=True)
+
+if __name__ == "__main__":
+    main()

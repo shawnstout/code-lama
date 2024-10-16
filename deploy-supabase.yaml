@@ -1,18 +1,7 @@
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: supabase-secrets
-type: Opaque
-stringData:
-  supabase-url: "http://supabase-service:8000"
-  supabase-key: "E1dgkTQp2MnLBi7ZI4uWwab5tHoORXxA"
-  postgres-password: "ZOz65mC7j1HUatFwyS2ABgI3JvrVqbGe"
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: supabase
+  name: supabase-deployment
 spec:
   replicas: 1
   selector:
@@ -25,32 +14,12 @@ spec:
     spec:
       containers:
       - name: supabase
-        image: supabase/postgres:14.1.0
+        image: supabase/postgres
         ports:
         - containerPort: 5432
         env:
         - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: supabase-secrets
-              key: postgres-password
-        - name: SUPABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: supabase-secrets
-              key: supabase-url
-        - name: SUPABASE_KEY
-          valueFrom:
-            secretKeyRef:
-              name: supabase-secrets
-              key: supabase-key
-        volumeMounts:
-        - name: supabase-storage
-          mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: supabase-storage
-        persistentVolumeClaim:
-          claimName: supabase-data
+          value: "your-supabase-password"
 ---
 apiVersion: v1
 kind: Service
@@ -63,5 +32,3 @@ spec:
     - protocol: TCP
       port: 5432
       targetPort: 5432
-
-

@@ -48,4 +48,51 @@ def process_task(ch, method, properties, body):
 channel.basic_consume(queue='ai_tasks', on_message_callback=process_task, auto_ack=True)
 
 print('Worker AI waiting for tasks. To exit press CTRL+C')
-channel.start_consuming()
+channel.start_consuming()import pika
+import json
+import time
+
+def connect_to_rabbitmq():
+    """Establish a connection to RabbitMQ."""
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='task_queue', durable=True)
+    channel.queue_declare(queue='result_queue', durable=True)
+    return connection, channel
+
+def process_task(ch, method, properties, body):
+    """Process the task received from the queue."""
+    task = json.loads(body)
+    print(f" [x] Received task: {task}")
+    
+    # Simulate AI processing
+    time.sleep(5)
+    
+    result = {
+        'input': task['input'],
+        'output': f"Processed: {task['input']}",
+        'timestamp': time.time()
+    }
+    
+    ch.basic_publish(
+        exchange='',
+        routing_key='result_queue',
+        body=json.dumps(result),
+        properties=pika.BasicProperties(
+            delivery_mode=2,  # make message persistent
+        ))
+    
+    print(f" [x] Sent result: {result}")
+    ch.basic_ack(delivery_tag=method.delivery_tag)
+
+def main():
+    connection, channel = connect_to_rabbitmq()
+    
+    channel.basic_qos(prefetch_count=1)
+    channel.basic_consume(queue='task_queue', on_message_callback=process_task)
+    
+    print(' [*] Waiting for tasks. To exit press CTRL+C')
+    channel.start_consuming()
+
+if __name__ == "__main__":
+    main()

@@ -48,3 +48,55 @@ Edit the `config.yaml` file to modify deployment settings, including image names
 
 - The deployment uses GPU acceleration for AI tasks. Ensure your system has a compatible NVIDIA GPU.
 - Secrets for PostgreSQL and Supabase are generated automatically if not provided as environment variables.
+# AI Environment Build
+
+This repository contains the necessary files and instructions to set up an AI environment using Docker and Kubernetes.
+
+## Prerequisites
+
+- Docker
+- Kubernetes (minikube or a cloud-based solution)
+- Python 3.9+
+
+## Getting Started
+
+1. Clone this repository:
+   ```
+   git clone https://github.com/yourusername/ai-environment-build.git
+   cd ai-environment-build
+   ```
+
+2. Build and run the Docker images:
+   ```
+   python build-and-run.py
+   ```
+
+3. Apply the Kubernetes configurations:
+   ```
+   kubectl apply -f k8s/
+   ```
+
+## Components
+
+- Master AI
+- Worker AI
+- RabbitMQ
+- Supabase
+- n8n
+- OpenWebUI
+
+## Configuration
+
+Edit the `config.yaml` file to customize your environment settings.
+
+## Troubleshooting
+
+If you encounter any issues, please check the `logs/build-and-run.txt` file for error messages.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

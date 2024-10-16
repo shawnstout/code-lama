@@ -1,2 +1,39 @@
 apiImage: api:latest
 workerImage: worker:latest
+kubernetes_configs:
+  deploy-master-ai.yaml: "Master AI Deployment"
+  deploy-worker-ai-34b.yaml: "Worker AI 34B Deployment"
+  deploy-worker-ai-70b.yaml: "Worker AI 70B Deployment"
+  deploy-rabbitmq.yaml: "RabbitMQ Deployment"
+  deploy-supabase.yaml: "Supabase Deployment"
+  deploy-n8n.yaml: "n8n Deployment"
+  deploy-openwebui.yaml: "OpenWebUI Deployment"
+  deploy-agentk.yaml: "AgentK Deployment"
+
+docker_images:
+  master: "master:latest"
+  worker: "worker:latest"
+  agentk: "agentk:latest"
+  ai-api: "ai-api:latest"
+  ai-worker: "ai-worker:latest"
+
+rabbitmq:
+  host: "rabbitmq-service"
+  port: 5672
+  username: "guest"
+  password: "guest"
+
+supabase:
+  host: "supabase-service"
+  port: 5432
+  database: "postgres"
+  username: "postgres"
+  password: "your-supabase-password"
+
+n8n:
+  host: "n8n-service"
+  port: 5678
+
+openwebui:
+  host: "openwebui-service"
+  port: 3000
