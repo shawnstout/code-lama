@@ -28,6 +28,25 @@ def execute_command(command):
         print(f"Error occurred on line {traceback.extract_stack()[-1][1]}: {e}")
         raise e
 
+# Function to build and push Docker images
+def build_and_push_docker_images():
+    write_log("Building and pushing Docker images...", important=True)
+
+    try:
+        # Build the AI API Docker image
+        execute_command("docker build -t ai-api -f api.Dockerfile .")
+        execute_command("docker push ai-api")
+        write_log("AI API Docker image built and pushed successfully.", important=True)
+
+        # Build the AI Worker Docker image
+        execute_command("docker build -t ai-worker -f worker.Dockerfile .")
+        execute_command("docker push ai-worker")
+        write_log("AI Worker Docker image built and pushed successfully.", important=True)
+    except (subprocess.CalledProcessError, FileNotFoundError) as e:
+        write_log(f"Error building or pushing Docker images: {str(e)}", important=True)
+        print(f"Error occurred on line {traceback.extract_stack()[-1][1]}: {str(e).strip()}")
+        raise e
+
 # Function to apply Kubernetes configurations
 def apply_kubernetes_config(deployment_config: Dict[str, str]):
     write_log(f"Applying {deployment_config['name']} configuration...", important=True)
@@ -45,8 +64,25 @@ def apply_kubernetes_config(deployment_config: Dict[str, str]):
         print(f"Error occurred on line {traceback.extract_stack()[-1][1]}: {error_message.strip()}")
         raise FileNotFoundError(error_message)
 
+# Function to delete Kubernetes deployments
+def delete_kubernetes_deployments():
+    write_log("Deleting existing Kubernetes deployments...", important=True)
+    try:
+        execute_command("kubectl delete deployment agentk")
+        write_log("Existing agentk deployment deleted successfully.", important=True)
+    except (subprocess.CalledProcessError, FileNotFoundError) as e:
+        write_log(f"Error deleting existing deployments: {str(e)}", important=True)
+        print(f"Error occurred on line {traceback.extract_stack()[-1][1]}: {str(e).strip()}")
+        raise e
+
 # Main function
 def main():
+    # Delete existing Kubernetes deployments
+    delete_kubernetes_deployments()
+
+    # Build and push Docker images
+    build_and_push_docker_images()
+
     # Apply Kubernetes configurations
     configurations = [
         {'name': 'agentk-deployment', 'k8sConfig': 'deploy-agentk.yaml'},
