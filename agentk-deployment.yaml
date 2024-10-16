@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentk-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agentk
+  template:
+    metadata:
+      labels:
+        app: agentk
+    spec:
+      containers:
+      - name: agentk
+        image: agentk:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentk-service
+spec:
+  selector:
+    app: agentk
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
