@@ -48,7 +48,9 @@ def process_task(ch, method, properties, body):
 channel.basic_consume(queue='ai_tasks', on_message_callback=process_task, auto_ack=True)
 
 print('Worker AI waiting for tasks. To exit press CTRL+C')
-channel.start_consuming()import pika
+channel.start_consuming()
+
+import pika
 import json
 import time
 

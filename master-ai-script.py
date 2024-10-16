@@ -50,7 +50,9 @@ results = get_results()
 print(results)
 
 # Close connection
-connection.close()import pika
+connection.close()
+
+import pika
 import json
 import time
 
